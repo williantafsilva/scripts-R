@@ -8,8 +8,9 @@
 #######################################################################################
 
 #######################################################################################
-#ggplot2 theme.
+#GGPLOT2:
 
+#ggplot2 theme.
 myggplottheme<-theme(title=element_text(size=10,face="bold"),
                      axis.title=element_text(size=10,face="bold"),
                      axis.text=element_text(size=10),
@@ -25,6 +26,47 @@ myggplottheme<-theme(title=element_text(size=10,face="bold"),
                      panel.grid.major=element_blank(),panel.grid.minor=element_blank(),
                      strip.background=element_rect(colour="black",
                                                    fill="white"))
+
+#List ggplot2 colors.
+ggplot2colors<-grDevices::colors()
+
+#######################################################################################
+#R BASE:
+
+linethickness<-1.5
+pointsize<-1
+fontsize<-1
+
+plot_blank<-function(){
+  plot(1,type="n",axes=F,xlab="",ylab="")
+}
+
+plot_pointtypes<-function(){
+   plot(1:25,rep(0,25),pch=1:25,col="black",
+      main="Point types",xlab="pch",ylab=NA,yaxt="n",
+      cex=pointsize,cex.main=pointsize,cex.lab=pointsize,cex.axis=pointsize,
+      col.axis="black") 
+}
+
+plot_linetypes<-function(){
+   plot(1:6,1:6,pch=NA,col=NULL,
+      main="Line types",xlab=NA,ylab="lty",xaxt="n",
+      cex=pointsize,cex.main=pointsize,cex.lab=pointsize,cex.axis=pointsize,
+      col.axis="black")
+   abline(h=1:6,lty=1:6,col="black",lwd=linethickness)
+}
+
+plot_rainbowcolors<-function(ncolors=50){
+   plot(1:50,1:50,pch=15,col="white",
+       main="Rainbow colors",
+       xlab=paste0("rainbow(x)"),ylab=NA,yaxt="n",
+       xlim=c(1,ncolors),ylim=c(1,ncolors),
+       cex=pointsize,cex.main=pointsize,cex.lab=pointsize,cex.axis=pointsize,
+       col.axis="black")
+   for(i in 1:50){
+      points(rep(i,i),1:i,pch=15,col=rainbow(i),cex=1)
+   }
+}
 
 #######################################################################################
 #Greek letters and mathematical symbols (plots).
