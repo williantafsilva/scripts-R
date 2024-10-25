@@ -29,6 +29,7 @@ myggplottheme<-theme(title=element_text(size=10,face="bold"),
 
 #List ggplot2 colors.
 ggplot2colors<-grDevices::colors()
+Rbasecolors<-colors()
 
 #######################################################################################
 #R BASE:
