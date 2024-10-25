@@ -23,7 +23,7 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 ##Output: iHH data file (.rds).
 
 ##Usage: 
-##Rscript --vanilla vcf-Rehh-iHH.R <JOB ID> <OUTPUT LOCATION> <.vcf.gz FILE> <TRUE/FALSE>
+##Rscript --vanilla Rehh-vcf-iHH.R <JOB ID> <OUTPUT LOCATION> <.vcf.gz FILE> <TRUE/FALSE>
 
 ############################################################################
 
