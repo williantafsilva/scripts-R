@@ -9,15 +9,15 @@
 
 #Manhattan plot.
 plot_manhattan<-function(
-    chrnamevector=paste0("Chr",1:10),
-    chrpositionvector=1:10,
-    values=runif(10),
-    abovethreshold=Inf,
-    belowthreshold=-Inf,
-    colors=c("blue","red"),
-    xlabel="Chromosome",
-    ylabel="Value",
-    plottitle="Manhattan plot"){
+  chrnamevector=paste0("Chr",1:10),
+  chrpositionvector=1:10,
+  values=runif(10),
+  abovethreshold=Inf,
+  belowthreshold=-Inf,
+  colors=c("blue","red"),
+  xlabel="Chromosome",
+  ylabel="Value",
+  plottitle="Manhattan plot"){
   
   #Load libraries.
   library(ggplot2)
