@@ -15,7 +15,6 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 
 ##Description:
 ##Plot results of selective sweep analysis with SweepFinder2, SweeD, OmegaPlus and/or Rehh.
-##SweeD results are always required because it uses SweeD locations as a reference when comparing methods.
 
 ##Input $1: Job ID.
 ##Input $2: Output location.
@@ -238,24 +237,33 @@ if("OmegaPlus" %in% METHODLIST & "Rehh" %in% METHODLIST){
 }
 
 #Plot Venn diagram with number of significant locations per method.
-ALLVALUES<-data.frame(
-  Chr_Loc_SweeD=paste0(DATA_SWEED$Chromosome,":",DATA_SWEED$Location))
+if("SweepFinder2" %in% METHODLIST){ #Use SweepFinder2 location as reference.
+  ALLVALUES<-data.frame(
+    Ref_Chr_Loc=paste0(DATA_SWEEPFINDER2$Chromosome,":",DATA_SWEEPFINDER2$Location))
+  }else if("SweeD" %in% METHODLIST){ #Use SweeD location as reference.
+    ALLVALUES<-data.frame(
+      Ref_Chr_Loc=paste0(DATA_SWEED$Chromosome,":",DATA_SWEED$Location))
+  }else if("OmegaPlus" %in% METHODLIST){ #Use OmegaPlus location as reference.
+    ALLVALUES<-data.frame(
+      Ref_Chr_Loc=paste0(DATA_OMEGAPLUS$Chromosome,":",DATA_OMEGAPLUS$Location))
+  }
+
 SIGNIFICANT<-list()
 if("SweepFinder2" %in% METHODLIST){
   ALLVALUES$Likelihood_SweepFinder2<-DATA_SWEEPFINDER2$Likelihood
-  SIGNIFICANT$SweepFinder2<-ALLVALUES$Chr_Loc_SweeD[ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2]
+  SIGNIFICANT$SweepFinder2<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2]
 }
 if("SweeD" %in% METHODLIST){
   ALLVALUES$Likelihood_SweeD<-DATA_SWEED$Likelihood
-  SIGNIFICANT$SweeD<-ALLVALUES$Chr_Loc_SweeD[ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED]
+  SIGNIFICANT$SweeD<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED]
 }
 if("OmegaPlus" %in% METHODLIST){
   ALLVALUES$Likelihood_OmegaPlus<-DATA_OMEGAPLUS$Likelihood
-  SIGNIFICANT$OmegaPlus<-ALLVALUES$Chr_Loc_SweeD[ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS]
+  SIGNIFICANT$OmegaPlus<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS]
 }
 if("Rehh" %in% METHODLIST){
   ALLVALUES$LogPvalue_Rehh<-COMPARE_SWEED_REHH$Rehh_LogPvalue
-  SIGNIFICANT$Rehh<-ALLVALUES$Chr_Loc_SweeD[ALLVALUES$LogPvalue_Rehh[!is.na(ALLVALUES$LogPvalue_Rehh)]>=THRESHOLD_REHH]
+  SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh[!is.na(ALLVALUES$LogPvalue_Rehh)]>=THRESHOLD_REHH]
 }
 
 p.venndiagram<-ggvenn(
