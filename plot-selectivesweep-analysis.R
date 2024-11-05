@@ -245,54 +245,51 @@ if("SweepFinder2" %in% METHODLIST){ #Use SweepFinder2 location as reference.
   REFMETHOD<-"SweepFinder2"
   ALLVALUES<-data.frame(
     Ref_Chr_Loc=paste0(DATA_SWEEPFINDER2$Chromosome,":",DATA_SWEEPFINDER2$Location),
-    Ref_Chr_Loc_Method="SweepFinder2")
+    Ref_Chr_Loc_Method="SweepFinder2",
+    Chromosome=DATA_SWEEPFINDER2$Chromosome)
   }else if("SweeD" %in% METHODLIST){ #Use SweeD location as reference.
     REFMETHOD<-"SweeD"
     ALLVALUES<-data.frame(
       Ref_Chr_Loc=paste0(DATA_SWEED$Chromosome,":",DATA_SWEED$Location),
-      Ref_Chr_Loc_Method="SweeD")
+      Ref_Chr_Loc_Method="SweeD",
+      Chromosome=DATA_SWEED$Chromosome)
   }else if("OmegaPlus" %in% METHODLIST){ #Use OmegaPlus location as reference.
     REFMETHOD<-"OmegaPlus"
     ALLVALUES<-data.frame(
       Ref_Chr_Loc=paste0(DATA_OMEGAPLUS$Chromosome,":",DATA_OMEGAPLUS$Location),
-      Ref_Chr_Loc_Method="OmegaPlus")
+      Ref_Chr_Loc_Method="OmegaPlus",
+      Chromosome=DATA_OMEGAPLUS$Chromosome)
   }
 
 SIGNIFICANT<-list()
 if("SweepFinder2" %in% METHODLIST){
-  ALLVALUES$Chromosome_SweepFinder2<-DATA_SWEEPFINDER2$Chromosome
   ALLVALUES$Location_SweepFinder2<-DATA_SWEEPFINDER2$Location
   ALLVALUES$Likelihood_SweepFinder2<-DATA_SWEEPFINDER2$Likelihood
   ALLVALUES$Significant_SweepFinder2<-(ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2)
   SIGNIFICANT$SweepFinder2<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2]
   if("Rehh" %in% METHODLIST){
-    ALLVALUES$Chromosome_Rehh<-COMPARE_SWEEPFINDER2_REHH$Rehh_Chromosome
     ALLVALUES$Location_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_Location
     ALLVALUES$LogPvalue_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_LogPvalue
     ALLVALUES$Significant_Rehh_SweepFinder2<-(ALLVALUES$LogPvalue_Rehh_SweepFinder2>=THRESHOLD_REHH)
   }
 }
 if("SweeD" %in% METHODLIST){
-  ALLVALUES$Chromosome_SweeD<-DATA_SWEED$Chromosome
   ALLVALUES$Location_SweeD<-DATA_SWEED$Location
   ALLVALUES$Likelihood_SweeD<-DATA_SWEED$Likelihood
   ALLVALUES$Significant_SweeD<-(ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED)
   SIGNIFICANT$SweeD<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED]
   if("Rehh" %in% METHODLIST){
-    ALLVALUES$Chromosome_Rehh<-COMPARE_SWEED_REHH$Rehh_Chromosome
     ALLVALUES$Location_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_Location
     ALLVALUES$LogPvalue_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_LogPvalue
     ALLVALUES$Significant_Rehh_SweeD<-(ALLVALUES$LogPvalue_Rehh_SweeD>=THRESHOLD_REHH)
   }
 }
 if("OmegaPlus" %in% METHODLIST){
-  ALLVALUES$Chromosome_OmegaPlus<-DATA_OMEGAPLUS$Chromosome
   ALLVALUES$Location_OmegaPlus<-DATA_OMEGAPLUS$Location
   ALLVALUES$Likelihood_OmegaPlus<-DATA_OMEGAPLUS$Likelihood
   ALLVALUES$Significant_OmegaPlus<-(ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS)
   SIGNIFICANT$OmegaPlus<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS]
   if("Rehh" %in% METHODLIST){
-    ALLVALUES$Chromosome_Rehh<-COMPARE_OMEGAPLUS_REHH$Rehh_Chromosome
     ALLVALUES$Location_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_Location
     ALLVALUES$LogPvalue_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_LogPvalue
     ALLVALUES$Significant_Rehh_OmegaPlus<-(ALLVALUES$LogPvalue_Rehh_OmegaPlus>=THRESHOLD_REHH)
@@ -674,7 +671,7 @@ file.remove(list.files(path=OUTPUTLOCATION,
                        full.names=TRUE,
                        pattern=paste0("tmp-plot*.*-job",JOBID,".pdf")))
 
-write.csv(ALLVALUES,OUTPUTFILE2)
+write.csv(ALLVALUES,OUTPUTFILE2,row.names=FALSE)
 
 cat("\n")
 cat("############################################################################\n")
