@@ -42,6 +42,10 @@ plot_blank<-function(){
   plot(1,type="n",axes=F,xlab="",ylab="")
 }
 
+plot_empty<-function(){
+  plot(1,type="n",axes=F,xlab="",ylab="")
+}
+
 plot_pointtypes<-function(){
    plot(1:25,rep(0,25),pch=1:25,col="black",
       main="Point types",xlab="pch",ylab=NA,yaxt="n",
