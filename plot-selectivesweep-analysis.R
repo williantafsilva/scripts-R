@@ -23,7 +23,7 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 ##Input $5: NA or SweeD data file (*.SweeDdata-job*.csv).
 ##Input $6: NA or OmegaPlus data file (*.OmegaPlusdata-job*.csv).
 ##Input $7: NA or Rehh data file (*.Rehhdata-job*.csv).
-##Output: Plots (.pdf).
+##Output: Plots (*.pdf) and method comparison data (*.csv).
 
 ##Usage: 
 ##Rscript --vanilla plot-selectivesweep-analysis.R <JOB ID> <OUTPUT LOCATION> \
@@ -80,16 +80,20 @@ if(ARGS[6]!="NA"){FILE_OMEGAPLUS<-normalizePath(ARGS[6])}else{FILE_OMEGAPLUS<-NA
 if(ARGS[7]!="NA"){FILE_REHH<-normalizePath(ARGS[7])}else{FILE_REHH<-NA}
 
 #Output file.
-OUTPUTFILENAME<-paste0("plot",GROUPCODE,".selectivesweepanalysis-job",JOBID,".pdf")
-OUTPUTFILE<-paste0(OUTPUTLOCATION,"/",OUTPUTFILENAME)
+OUTPUTFILE1NAME<-paste0("plots",GROUPCODE,".selectivesweepanalysis-job",JOBID,".pdf")
+OUTPUTFILE2NAME<-paste0("methodcomparisondata",GROUPCODE,".selectivesweepanalysis-job",JOBID,".csv")
+OUTPUTFILE1<-paste0(OUTPUTLOCATION,"/",OUTPUTFILE1NAME)
+OUTPUTFILE2<-paste0(OUTPUTLOCATION,"/",OUTPUTFILE2NAME)
 
 cat(paste0("FILE_SWEEPFINDER2: ",FILE_SWEEPFINDER2,"\n"))
 cat(paste0("FILE_SWEED: ",FILE_SWEED,"\n"))
 cat(paste0("FILE_OMEGAPLUS: ",FILE_OMEGAPLUS,"\n"))
 cat(paste0("FILE_REHH: ",FILE_REHH,"\n"))
 cat(paste0("OUTPUTLOCATION: ",OUTPUTLOCATION,"\n"))
-cat(paste0("OUTPUTFILENAME: ",OUTPUTFILENAME,"\n"))
-cat(paste0("OUTPUTFILE: ",OUTPUTFILE,"\n"))
+cat(paste0("OUTPUTFILE1NAME: ",OUTPUTFILE1NAME,"\n"))
+cat(paste0("OUTPUTFILE2NAME: ",OUTPUTFILE2NAME,"\n"))
+cat(paste0("OUTPUTFILE1: ",OUTPUTFILE1,"\n"))
+cat(paste0("OUTPUTFILE2: ",OUTPUTFILE2,"\n"))
 
 cat("\n")
 cat(paste0("PROCESSING FILES:",FILE_SWEEPFINDER2,", ",FILE_SWEED,", ",FILE_OMEGAPLUS," and ",FILE_REHH,".\n"))
@@ -127,44 +131,44 @@ if(!is.na(FILE_REHH)){
 #Compare methods.
 if("SweepFinder2" %in% METHODLIST & "SweeD" %in% METHODLIST){
   #SweepFinder2 x SweeD.
-  COMPARE_SWEEPFINDER2_SWEED<-data.frame(SweepFinder2_Chr=DATA_SWEEPFINDER2$Chromosome,
+  COMPARE_SWEEPFINDER2_SWEED<-data.frame(SweepFinder2_Chromosome=DATA_SWEEPFINDER2$Chromosome,
                                          SweepFinder2_Location=DATA_SWEEPFINDER2$Location,
                                          SweepFinder2_Likelihood=DATA_SWEEPFINDER2$Likelihood,
-                                         SweeD_Chr=DATA_SWEED$Chromosome,
+                                         SweeD_Chromosome=DATA_SWEED$Chromosome,
                                          SweeD_Location=DATA_SWEED$Location,
                                          SweeD_Likelihood=DATA_SWEED$Likelihood)
 }
 
 if("SweepFinder2" %in% METHODLIST & "OmegaPlus" %in% METHODLIST){
   #SweepFinder2 x OmegaPlus.
-  COMPARE_SWEEPFINDER2_OMEGAPLUS<-data.frame(SweepFinder2_Chr=DATA_SWEEPFINDER2$Chromosome,
+  COMPARE_SWEEPFINDER2_OMEGAPLUS<-data.frame(SweepFinder2_Chromosome=DATA_SWEEPFINDER2$Chromosome,
                                              SweepFinder2_Location=DATA_SWEEPFINDER2$Location,
                                              SweepFinder2_Likelihood=DATA_SWEEPFINDER2$Likelihood,
-                                             OmegaPlus_Chr=DATA_OMEGAPLUS$Chromosome,
+                                             OmegaPlus_Chromosome=DATA_OMEGAPLUS$Chromosome,
                                              OmegaPlus_Location=DATA_OMEGAPLUS$Location,
                                              OmegaPlus_Likelihood=DATA_OMEGAPLUS$Likelihood)
 }
 
 if("SweepFinder2" %in% METHODLIST & "Rehh" %in% METHODLIST){
   #SweepFinder2 x Rehh.
-  COMPARE_SWEEPFINDER2_REHH<-data.frame(SweepFinder2_Chr=DATA_SWEEPFINDER2$Chromosome,
+  COMPARE_SWEEPFINDER2_REHH<-data.frame(SweepFinder2_Chromosome=DATA_SWEEPFINDER2$Chromosome,
                                         SweepFinder2_Location=DATA_SWEEPFINDER2$Location,
                                         SweepFinder2_Likelihood=DATA_SWEEPFINDER2$Likelihood,
-                                        Rehh_Chr=NA,
+                                        Rehh_Chromosome=NA,
                                         Rehh_Location=NA,
                                         Rehh_LogPvalue=NA)
   #Remove NA values, leaving only locations with a P-value, but increasing the
   #distance between equivalent locations.
   #DATA_REHH<-DATA_REHH[!is.na(DATA_REHH$LogPvalue),] 
   #Find equivalent locations.
-  for(CHR in unique(COMPARE_SWEEPFINDER2_REHH$SweepFinder2_Chr)){
+  for(CHR in unique(COMPARE_SWEEPFINDER2_REHH$SweepFinder2_Chromosome)){
     if(sum(DATA_REHH$Chromosome==CHR)>0){
       TMP_REHHDATA<-DATA_REHH[DATA_REHH$Chromosome==CHR,]
-      COMPARE_CHRINDEX<-which(COMPARE_SWEEPFINDER2_REHH$SweepFinder2_Chr==CHR)
+      COMPARE_CHRINDEX<-which(COMPARE_SWEEPFINDER2_REHH$SweepFinder2_Chromosome==CHR)
       for(i in COMPARE_CHRINDEX){
         LOC<-COMPARE_SWEEPFINDER2_REHH$SweepFinder2_Location[i]
         INDEX_CLOSEST<-closest_index(LOC,TMP_REHHDATA$Location)
-        COMPARE_SWEEPFINDER2_REHH$Rehh_Chr[i]<-CHR
+        COMPARE_SWEEPFINDER2_REHH$Rehh_Chromosome[i]<-CHR
         COMPARE_SWEEPFINDER2_REHH$Rehh_Location[i]<-TMP_REHHDATA$Location[INDEX_CLOSEST]
         COMPARE_SWEEPFINDER2_REHH$Rehh_LogPvalue[i]<-TMP_REHHDATA$LogPvalue[INDEX_CLOSEST]
       }
@@ -174,34 +178,34 @@ if("SweepFinder2" %in% METHODLIST & "Rehh" %in% METHODLIST){
 
 if("SweeD" %in% METHODLIST & "OmegaPlus" %in% METHODLIST){
   #SweeD x OmegaPlus.
-  COMPARE_SWEED_OMEGAPLUS<-data.frame(SweeD_Chr=DATA_SWEED$Chromosome,
+  COMPARE_SWEED_OMEGAPLUS<-data.frame(SweeD_Chromosome=DATA_SWEED$Chromosome,
                                       SweeD_Location=DATA_SWEED$Location,
                                       SweeD_Likelihood=DATA_SWEED$Likelihood,
-                                      OmegaPlus_Chr=DATA_OMEGAPLUS$Chromosome,
+                                      OmegaPlus_Chromosome=DATA_OMEGAPLUS$Chromosome,
                                       OmegaPlus_Location=DATA_OMEGAPLUS$Location,
                                       OmegaPlus_Likelihood=DATA_OMEGAPLUS$Likelihood)
 }
 
 if("SweeD" %in% METHODLIST & "Rehh" %in% METHODLIST){
   #SweeD x Rehh.
-  COMPARE_SWEED_REHH<-data.frame(SweeD_Chr=DATA_SWEED$Chromosome,
+  COMPARE_SWEED_REHH<-data.frame(SweeD_Chromosome=DATA_SWEED$Chromosome,
                                  SweeD_Location=DATA_SWEED$Location,
                                  SweeD_Likelihood=DATA_SWEED$Likelihood,
-                                 Rehh_Chr=NA,
+                                 Rehh_Chromosome=NA,
                                  Rehh_Location=NA,
                                  Rehh_LogPvalue=NA)
   #Remove NA values, leaving only locations with a P-value, but increasing the
   #distance between equivalent locations.
   #DATA_REHH<-DATA_REHH[!is.na(DATA_REHH$LogPvalue),] 
   #Find equivalent locations.
-  for(CHR in unique(COMPARE_SWEED_REHH$SweeD_Chr)){
+  for(CHR in unique(COMPARE_SWEED_REHH$SweeD_Chromosome)){
     if(sum(DATA_REHH$Chromosome==CHR)>0){
       TMP_REHHDATA<-DATA_REHH[DATA_REHH$Chromosome==CHR,]
-      COMPARE_CHRINDEX<-which(COMPARE_SWEED_REHH$SweeD_Chr==CHR)
+      COMPARE_CHRINDEX<-which(COMPARE_SWEED_REHH$SweeD_Chromosome==CHR)
       for(i in COMPARE_CHRINDEX){
         LOC<-COMPARE_SWEED_REHH$SweeD_Location[i]
         INDEX_CLOSEST<-closest_index(LOC,TMP_REHHDATA$Location)
-        COMPARE_SWEED_REHH$Rehh_Chr[i]<-CHR
+        COMPARE_SWEED_REHH$Rehh_Chromosome[i]<-CHR
         COMPARE_SWEED_REHH$Rehh_Location[i]<-TMP_REHHDATA$Location[INDEX_CLOSEST]
         COMPARE_SWEED_REHH$Rehh_LogPvalue[i]<-TMP_REHHDATA$LogPvalue[INDEX_CLOSEST]
       }
@@ -211,24 +215,24 @@ if("SweeD" %in% METHODLIST & "Rehh" %in% METHODLIST){
 
 if("OmegaPlus" %in% METHODLIST & "Rehh" %in% METHODLIST){
   #OmegaPlus x Rehh.
-  COMPARE_OMEGAPLUS_REHH<-data.frame(OmegaPlus_Chr=DATA_OMEGAPLUS$Chromosome,
+  COMPARE_OMEGAPLUS_REHH<-data.frame(OmegaPlus_Chromosome=DATA_OMEGAPLUS$Chromosome,
                                      OmegaPlus_Location=DATA_OMEGAPLUS$Location,
                                      OmegaPlus_Likelihood=DATA_OMEGAPLUS$Likelihood,
-                                     Rehh_Chr=NA,
+                                     Rehh_Chromosome=NA,
                                      Rehh_Location=NA,
                                      Rehh_LogPvalue=NA)
   #Remove NA values, leaving only locations with a P-value, but increasing the
   #distance between equivalent locations.
   #DATA_REHH<-DATA_REHH[!is.na(DATA_REHH$LogPvalue),] 
   #Find equivalent locations.
-  for(CHR in unique(COMPARE_OMEGAPLUS_REHH$OmegaPlus_Chr)){
+  for(CHR in unique(COMPARE_OMEGAPLUS_REHH$OmegaPlus_Chromosome)){
     if(sum(DATA_REHH$Chromosome==CHR)>0){
       TMP_REHHDATA<-DATA_REHH[DATA_REHH$Chromosome==CHR,]
-      COMPARE_CHRINDEX<-which(COMPARE_OMEGAPLUS_REHH$OmegaPlus_Chr==CHR)
+      COMPARE_CHRINDEX<-which(COMPARE_OMEGAPLUS_REHH$OmegaPlus_Chromosome==CHR)
       for(i in COMPARE_CHRINDEX){
         LOC<-COMPARE_OMEGAPLUS_REHH$OmegaPlus_Location[i]
         INDEX_CLOSEST<-closest_index(LOC,TMP_REHHDATA$Location)
-        COMPARE_OMEGAPLUS_REHH$Rehh_Chr[i]<-CHR
+        COMPARE_OMEGAPLUS_REHH$Rehh_Chromosome[i]<-CHR
         COMPARE_OMEGAPLUS_REHH$Rehh_Location[i]<-TMP_REHHDATA$Location[INDEX_CLOSEST]
         COMPARE_OMEGAPLUS_REHH$Rehh_LogPvalue[i]<-TMP_REHHDATA$LogPvalue[INDEX_CLOSEST]
       }
@@ -238,32 +242,73 @@ if("OmegaPlus" %in% METHODLIST & "Rehh" %in% METHODLIST){
 
 #Plot Venn diagram with number of significant locations per method.
 if("SweepFinder2" %in% METHODLIST){ #Use SweepFinder2 location as reference.
+  REFMETHOD<-"SweepFinder2"
   ALLVALUES<-data.frame(
-    Ref_Chr_Loc=paste0(DATA_SWEEPFINDER2$Chromosome,":",DATA_SWEEPFINDER2$Location))
+    Ref_Chr_Loc=paste0(DATA_SWEEPFINDER2$Chromosome,":",DATA_SWEEPFINDER2$Location),
+    Ref_Chr_Loc_Method="SweepFinder2")
   }else if("SweeD" %in% METHODLIST){ #Use SweeD location as reference.
+    REFMETHOD<-"SweeD"
     ALLVALUES<-data.frame(
-      Ref_Chr_Loc=paste0(DATA_SWEED$Chromosome,":",DATA_SWEED$Location))
+      Ref_Chr_Loc=paste0(DATA_SWEED$Chromosome,":",DATA_SWEED$Location),
+      Ref_Chr_Loc_Method="SweeD")
   }else if("OmegaPlus" %in% METHODLIST){ #Use OmegaPlus location as reference.
+    REFMETHOD<-"OmegaPlus"
     ALLVALUES<-data.frame(
-      Ref_Chr_Loc=paste0(DATA_OMEGAPLUS$Chromosome,":",DATA_OMEGAPLUS$Location))
+      Ref_Chr_Loc=paste0(DATA_OMEGAPLUS$Chromosome,":",DATA_OMEGAPLUS$Location),
+      Ref_Chr_Loc_Method="OmegaPlus")
   }
 
 SIGNIFICANT<-list()
 if("SweepFinder2" %in% METHODLIST){
+  ALLVALUES$Chromosome_SweepFinder2<-DATA_SWEEPFINDER2$Chromosome
+  ALLVALUES$Location_SweepFinder2<-DATA_SWEEPFINDER2$Location
   ALLVALUES$Likelihood_SweepFinder2<-DATA_SWEEPFINDER2$Likelihood
+  ALLVALUES$Significant_SweepFinder2<-(ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2)
   SIGNIFICANT$SweepFinder2<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2]
+  if("Rehh" %in% METHODLIST){
+    ALLVALUES$Chromosome_Rehh<-COMPARE_SWEEPFINDER2_REHH$Rehh_Chromosome
+    ALLVALUES$Location_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_Location
+    ALLVALUES$LogPvalue_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_LogPvalue
+    ALLVALUES$Significant_Rehh_SweepFinder2<-(ALLVALUES$LogPvalue_Rehh_SweepFinder2>=THRESHOLD_REHH)
+  }
 }
 if("SweeD" %in% METHODLIST){
+  ALLVALUES$Chromosome_SweeD<-DATA_SWEED$Chromosome
+  ALLVALUES$Location_SweeD<-DATA_SWEED$Location
   ALLVALUES$Likelihood_SweeD<-DATA_SWEED$Likelihood
+  ALLVALUES$Significant_SweeD<-(ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED)
   SIGNIFICANT$SweeD<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED]
+  if("Rehh" %in% METHODLIST){
+    ALLVALUES$Chromosome_Rehh<-COMPARE_SWEED_REHH$Rehh_Chromosome
+    ALLVALUES$Location_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_Location
+    ALLVALUES$LogPvalue_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_LogPvalue
+    ALLVALUES$Significant_Rehh_SweeD<-(ALLVALUES$LogPvalue_Rehh_SweeD>=THRESHOLD_REHH)
+  }
 }
 if("OmegaPlus" %in% METHODLIST){
+  ALLVALUES$Chromosome_OmegaPlus<-DATA_OMEGAPLUS$Chromosome
+  ALLVALUES$Location_OmegaPlus<-DATA_OMEGAPLUS$Location
   ALLVALUES$Likelihood_OmegaPlus<-DATA_OMEGAPLUS$Likelihood
+  ALLVALUES$Significant_OmegaPlus<-(ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS)
   SIGNIFICANT$OmegaPlus<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS]
+  if("Rehh" %in% METHODLIST){
+    ALLVALUES$Chromosome_Rehh<-COMPARE_OMEGAPLUS_REHH$Rehh_Chromosome
+    ALLVALUES$Location_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_Location
+    ALLVALUES$LogPvalue_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_LogPvalue
+    ALLVALUES$Significant_Rehh_OmegaPlus<-(ALLVALUES$LogPvalue_Rehh_OmegaPlus>=THRESHOLD_REHH)
+  }
 }
+
 if("Rehh" %in% METHODLIST){
-  ALLVALUES$LogPvalue_Rehh<-COMPARE_SWEED_REHH$Rehh_LogPvalue
-  SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh[!is.na(ALLVALUES$LogPvalue_Rehh)]>=THRESHOLD_REHH]
+  if(REFMETHOD=="SweepFinder2"){
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_SweepFinder2[!is.na(ALLVALUES$LogPvalue_Rehh_SweepFinder2)]>=THRESHOLD_REHH]
+  }
+  if(REFMETHOD=="SweeD"){
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_SweeD[!is.na(ALLVALUES$LogPvalue_Rehh_SweeD)]>=THRESHOLD_REHH]
+  }
+  if(REFMETHOD=="OmegaPlus"){
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_OmegaPlus[!is.na(ALLVALUES$LogPvalue_Rehh_OmegaPlus)]>=THRESHOLD_REHH]
+  }
 }
 
 p.venndiagram<-ggvenn(
@@ -623,11 +668,13 @@ pdf_combine(
   input=list.files(path=OUTPUTLOCATION,
                    full.names=TRUE,
                    pattern=paste0("tmp-plot*.*-job",JOBID,".pdf")),
-  output=OUTPUTFILE)
+  output=OUTPUTFILE1)
 
 file.remove(list.files(path=OUTPUTLOCATION,
                        full.names=TRUE,
                        pattern=paste0("tmp-plot*.*-job",JOBID,".pdf")))
+
+write.csv(ALLVALUES,OUTPUTFILE2)
 
 cat("\n")
 cat("############################################################################\n")
@@ -642,7 +689,8 @@ SweepFinder2 file: ",FILE_SWEEPFINDER2,"
 SweeD file: ",FILE_SWEED,"
 OmegaPlus file: ",FILE_OMEGAPLUS,"
 Rehh file: ",FILE_REHH,"
-Output file: ",OUTPUTFILE,"
+Output file: ",OUTPUTFILE1,"
+Output file: ",OUTPUTFILE2,"
 
 "),file=paste0(OUTPUTLOCATION,"/README.txt"),append=TRUE)
 
