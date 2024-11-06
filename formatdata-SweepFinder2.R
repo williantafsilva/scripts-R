@@ -143,7 +143,7 @@ SWEEPDATA$RescaledLikelihood[!is.na(SWEEPDATA$Likelihood)]<-
   (max(SWEEPDATA$Likelihood[!is.na(SWEEPDATA$Likelihood)])-min(SWEEPDATA$Likelihood[!is.na(SWEEPDATA$Likelihood)]))
 
 #Save concatenated data.
-write.csv(SWEEPDATA,file=OUTPUTFILE,row.names=FALSE,col.names=TRUE)
+write.csv(SWEEPDATA,file=OUTPUTFILE,row.names=FALSE)
 
 cat("\n")
 cat("############################################################################\n")
