@@ -103,10 +103,27 @@ DATA_TRANSCRIPTS<-getBM(attributes=c("chromosome_name","start_position","end_pos
                                #"ensembl_peptide_id","protein_id",
                                "description"),
                   filters=c("chromosome_name","start","end"),
-                  values=list("chromosome_name"=INPUTDATA$Chromosome,
-                              "start"=INPUTDATA$Start,
-                              "end"=INPUTDATA$End),
+                  values=list("chromosome_name"=INPUTDATA$Chromosome[1],
+                              "start"=INPUTDATA$Start[1],
+                              "end"=INPUTDATA$End[1]),
                   mart=ensembl_genes_gal7b)
+
+if(nrow(INPUTDATA)>1){
+  for(i in 2:nrow(INPUTDATA)){
+    TMP<-getBM(attributes=c("chromosome_name","start_position","end_position","strand",
+                               "ensembl_transcript_id","external_transcript_name",
+                               "transcript_start","transcript_end",
+                               "transcript_length","transcript_biotype",
+                               #"ensembl_peptide_id","protein_id",
+                               "description"),
+                  filters=c("chromosome_name","start","end"),
+                  values=list("chromosome_name"=INPUTDATA$Chromosome[i],
+                              "start"=INPUTDATA$Start[i],
+                              "end"=INPUTDATA$End[i]),
+                  mart=ensembl_genes_gal7b)
+    DATA_TRANSCRIPTS<-rbind(DATA_TRANSCRIPTS,TMP)
+  }
+}
 
 #Save formatted data.
 write.table(DATA_TRANSCRIPTS,file=OUTPUTFILE,sep="\t",row.names=FALSE,col.names=TRUE)
