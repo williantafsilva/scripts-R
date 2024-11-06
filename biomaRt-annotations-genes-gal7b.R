@@ -181,12 +181,15 @@ cat(paste0("####################################################################
 Date: ",RUNDATE,"
 Job ID: ",JOBID,"
 Script: ",SCRIPTNAME,"
-Input file: ",INPUTFILE,"
+Output file tag: ",OUTPUTFILETAG,"
+Chromosome: ",CHRLIST,"
+Start position: ",STARTPOSLIST,"
+End position: ",ENDPOSLIST,"
 Output file: ",OUTPUTFILE,"
 
 "),file=paste0(OUTPUTLOCATION,"/README.txt"),append=TRUE)
 
-cat(paste0("FILE ",INPUTFILE," PROCESSED.","\n"))
+cat(paste0("DATA PROCESSED.","\n"))
 
 cat("\n")
 cat("############################################################################\n")
