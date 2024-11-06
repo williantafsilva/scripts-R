@@ -85,12 +85,11 @@ cat(paste0("PROCESSING INPUT DATA.\n"))
 ############################################################################
 
 #Input data.
-INPUTDATA<-data.frame(Chromosome=c(CHRLIST),
-                      Start=c(STARTPOSLIST),
-                      End=c(ENDPOSLIST))
+INPUTDATA<-data.frame(Chromosome=strsplit(CHRLIST,",")[[1]],
+                      Start=strsplit(STARTPOSLIST,",")[[1]],
+                      End=strsplit(ENDPOSLIST,",")[[1]])
 INPUTDATA$Chromosome<-gsub("Chr","",INPUTDATA$Chromosome) #Remove "Chr" from chromosome names.
 INPUTDATA$Chromosome<-gsub("chr","",INPUTDATA$Chromosome) #Remove "chr" from chromosome names.
-
 INPUTDATA
 
 #List available types of annotation.
