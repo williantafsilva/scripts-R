@@ -23,7 +23,7 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 ##Input $5: NA or SweeD data file (*.SweeDdata-job*.csv).
 ##Input $6: NA or OmegaPlus data file (*.OmegaPlusdata-job*.csv).
 ##Input $7: NA or Rehh data file (*.Rehhdata-job*.csv).
-##Output: Plots (*.pdf) and method comparison data (*.csv).
+##Output: Plots (*.pdf) and method comparison data (*.txt).
 
 ##Usage: 
 ##Rscript --vanilla plot-selectivesweep-analysis.R <JOB ID> <OUTPUT LOCATION> \
@@ -81,7 +81,7 @@ if(ARGS[7]!="NA"){FILE_REHH<-normalizePath(ARGS[7])}else{FILE_REHH<-NA}
 
 #Output file.
 OUTPUTFILE1NAME<-paste0("plots",GROUPCODE,".selectivesweepanalysis-job",JOBID,".pdf")
-OUTPUTFILE2NAME<-paste0("methodcomparisondata",GROUPCODE,".selectivesweepanalysis-job",JOBID,".csv")
+OUTPUTFILE2NAME<-paste0("methodcomparisondata",GROUPCODE,".selectivesweepanalysis-job",JOBID,".txt")
 OUTPUTFILE1<-paste0(OUTPUTLOCATION,"/",OUTPUTFILE1NAME)
 OUTPUTFILE2<-paste0(OUTPUTLOCATION,"/",OUTPUTFILE2NAME)
 
@@ -321,7 +321,7 @@ if("Rehh" %in% METHODLIST){
   }
 }
 ALLVALUES$SignificantMethods[ALLVALUES$SignificantMethods=="Significant:"]<-"Significant:NONE"
-ALLVALUES$SignificantMethods<-gsub("Significant:","",ALLVALUES$SignificantMethods))
+ALLVALUES$SignificantMethods<-gsub("Significant:","",ALLVALUES$SignificantMethods)
 
 p.venndiagram<-ggvenn(
   SIGNIFICANT, 
@@ -686,7 +686,7 @@ file.remove(list.files(path=OUTPUTLOCATION,
                        full.names=TRUE,
                        pattern=paste0("tmp-plot*.*-job",JOBID,".pdf")))
 
-write.csv(ALLVALUES,OUTPUTFILE2,row.names=FALSE)
+write.table(ALLVALUES,file=OUTPUTFILE2,sep="\t",row.names=FALSE,col.names=TRUE)
 
 cat("\n")
 cat("############################################################################\n")
