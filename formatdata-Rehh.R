@@ -125,7 +125,7 @@ for(C in CHRSEQ){
 }
 
 #Save formatted data.
-write.csv(SWEEPDATA,file=OUTPUTFILE,row.names=FALSE,col.names=TRUE)
+write.csv(SWEEPDATA,file=OUTPUTFILE,row.names=FALSE)
 
 cat("\n")
 cat("############################################################################\n")
