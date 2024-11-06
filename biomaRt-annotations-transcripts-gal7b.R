@@ -20,9 +20,9 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 #Input $1: Job ID.
 #Input $2: Output location.
 #Input $3: Output file tag.
-#Input $4: Chromosome (or comma-separated list of chromosome names).
-#Input $5: Start position (or comma-separated list of start positions).
-#Input $6: End position (or comma-separated list of end positions).
+#Input $4: Chromosome (or comma-separated list of chromosome names; use | paste -sd,).
+#Input $5: Start position (or comma-separated list of start positions; use | paste -sd,).
+#Input $6: End position (or comma-separated list of end positions; use | paste -sd,).
 #Output: File with annotations (*.txt).
 
 #Usage: 
