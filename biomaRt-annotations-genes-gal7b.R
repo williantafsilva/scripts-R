@@ -79,7 +79,7 @@ cat(paste0("OUTPUTFILENAME: ",OUTPUTFILENAME,"\n"))
 cat(paste0("OUTPUTFILE: ",OUTPUTFILE,"\n"))
 
 cat("\n")
-cat(paste0("PROCESSING FILE: ",INPUTFILE,"\n"))
+cat(paste0("PROCESSING INPUT DATA.\n"))
 ############################################################################
 ############################################################################
 ############################################################################
