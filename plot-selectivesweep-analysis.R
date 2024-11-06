@@ -261,52 +261,67 @@ if("SweepFinder2" %in% METHODLIST){ #Use SweepFinder2 location as reference.
       Chromosome=DATA_OMEGAPLUS$Chromosome)
   }
 
+ALLVALUES$SignificantMethods<-"Significant:"
 SIGNIFICANT<-list()
 if("SweepFinder2" %in% METHODLIST){
   ALLVALUES$Location_SweepFinder2<-DATA_SWEEPFINDER2$Location
-  ALLVALUES$Likelihood_SweepFinder2<-DATA_SWEEPFINDER2$Likelihood
-  ALLVALUES$Significant_SweepFinder2<-(ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2)
-  SIGNIFICANT$SweepFinder2<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2]
+  Likelihood_SweepFinder2<-DATA_SWEEPFINDER2$Likelihood
+  Significant_SweepFinder2<-(Likelihood_SweepFinder2>=THRESHOLD_SWEEPFINDER2)
+  ALLVALUES$SignificantMethods[Significant_SweepFinder2]<-paste0(
+    ALLVALUES$SignificantMethods[Significant_SweepFinder2],"SweepFinder2")
+  SIGNIFICANT$SweepFinder2<-ALLVALUES$Ref_Chr_Loc[Significant_SweepFinder2]
   if("Rehh" %in% METHODLIST){
     ALLVALUES$Location_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_Location
-    ALLVALUES$LogPvalue_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_LogPvalue
-    ALLVALUES$Significant_Rehh_SweepFinder2<-(ALLVALUES$LogPvalue_Rehh_SweepFinder2>=THRESHOLD_REHH)
+    LogPvalue_Rehh_SweepFinder2<-COMPARE_SWEEPFINDER2_REHH$Rehh_LogPvalue
+    Significant_Rehh_SweepFinder2<-(LogPvalue_Rehh_SweepFinder2>=THRESHOLD_REHH & !is.na(LogPvalue_Rehh_SweepFinder2))
   }
 }
 if("SweeD" %in% METHODLIST){
   ALLVALUES$Location_SweeD<-DATA_SWEED$Location
-  ALLVALUES$Likelihood_SweeD<-DATA_SWEED$Likelihood
-  ALLVALUES$Significant_SweeD<-(ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED)
-  SIGNIFICANT$SweeD<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_SweeD>=THRESHOLD_SWEED]
+  Likelihood_SweeD<-DATA_SWEED$Likelihood
+  Significant_SweeD<-(Likelihood_SweeD>=THRESHOLD_SWEED)
+  ALLVALUES$SignificantMethods[Significant_SweeD]<-paste0(
+    ALLVALUES$SignificantMethods[Significant_SweeD],"SweeD")
+  SIGNIFICANT$SweeD<-ALLVALUES$Ref_Chr_Loc[Significant_SweeD]
   if("Rehh" %in% METHODLIST){
     ALLVALUES$Location_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_Location
-    ALLVALUES$LogPvalue_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_LogPvalue
-    ALLVALUES$Significant_Rehh_SweeD<-(ALLVALUES$LogPvalue_Rehh_SweeD>=THRESHOLD_REHH)
+    LogPvalue_Rehh_SweeD<-COMPARE_SWEED_REHH$Rehh_LogPvalue
+    Significant_Rehh_SweeD<-(LogPvalue_Rehh_SweeD>=THRESHOLD_REHH & !is.na(LogPvalue_Rehh_SweeD))
   }
 }
 if("OmegaPlus" %in% METHODLIST){
   ALLVALUES$Location_OmegaPlus<-DATA_OMEGAPLUS$Location
-  ALLVALUES$Likelihood_OmegaPlus<-DATA_OMEGAPLUS$Likelihood
-  ALLVALUES$Significant_OmegaPlus<-(ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS)
-  SIGNIFICANT$OmegaPlus<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS]
+  Likelihood_OmegaPlus<-DATA_OMEGAPLUS$Likelihood
+  Significant_OmegaPlus<-(Likelihood_OmegaPlus>=THRESHOLD_OMEGAPLUS)
+  ALLVALUES$SignificantMethods[Significant_OmegaPlus]<-paste0(
+    ALLVALUES$SignificantMethods[Significant_OmegaPlus],"OmegaPlus")
+  SIGNIFICANT$OmegaPlus<-ALLVALUES$Ref_Chr_Loc[Significant_OmegaPlus]
   if("Rehh" %in% METHODLIST){
     ALLVALUES$Location_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_Location
-    ALLVALUES$LogPvalue_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_LogPvalue
-    ALLVALUES$Significant_Rehh_OmegaPlus<-(ALLVALUES$LogPvalue_Rehh_OmegaPlus>=THRESHOLD_REHH)
+    LogPvalue_Rehh_OmegaPlus<-COMPARE_OMEGAPLUS_REHH$Rehh_LogPvalue
+    Significant_Rehh_OmegaPlus<-(LogPvalue_Rehh_OmegaPlus>=THRESHOLD_REHH & !is.na(LogPvalue_Rehh_OmegaPlus))
   }
 }
 
 if("Rehh" %in% METHODLIST){
   if(REFMETHOD=="SweepFinder2"){
-    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_SweepFinder2[!is.na(ALLVALUES$LogPvalue_Rehh_SweepFinder2)]>=THRESHOLD_REHH]
+    ALLVALUES$SignificantMethods[Significant_Rehh_SweepFinder2]<-paste0(
+      ALLVALUES$SignificantMethods[Significant_Rehh_SweepFinder2],"Rehh")
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[Significant_Rehh_SweepFinder2]
   }
   if(REFMETHOD=="SweeD"){
-    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_SweeD[!is.na(ALLVALUES$LogPvalue_Rehh_SweeD)]>=THRESHOLD_REHH]
+    ALLVALUES$SignificantMethods[Significant_Rehh_SweeD]<-paste0(
+      ALLVALUES$SignificantMethods[Significant_Rehh_SweeD],"Rehh")
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[Significant_Rehh_SweeD]
   }
   if(REFMETHOD=="OmegaPlus"){
-    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[ALLVALUES$LogPvalue_Rehh_OmegaPlus[!is.na(ALLVALUES$LogPvalue_Rehh_OmegaPlus)]>=THRESHOLD_REHH]
+    ALLVALUES$SignificantMethods[Significant_Rehh_OmegaPlus]<-paste0(
+      ALLVALUES$SignificantMethods[Significant_Rehh_OmegaPlus],"Rehh")
+    SIGNIFICANT$Rehh<-ALLVALUES$Ref_Chr_Loc[Significant_Rehh_OmegaPlus]
   }
 }
+ALLVALUES$SignificantMethods[ALLVALUES$SignificantMethods=="Significant:"]<-"Significant:NONE"
+ALLVALUES$SignificantMethods<-gsub("Significant:","",ALLVALUES$SignificantMethods))
 
 p.venndiagram<-ggvenn(
   SIGNIFICANT, 
