@@ -95,14 +95,27 @@ INPUTDATA
 #Load Mart object with desired dataset.
 ensembl_snps_gal7b<-useEnsembl(biomart="snps",dataset="ggallus_snp") #SNPs.
 
-Query database.
+#Query database.
 DATA_SNPS<-getBM(attributes=c("chr_name","chrom_start","chrom_strand","refsnp_id",
                               "allele","ensembl_gene_stable_id","ensembl_type"),
                  filters=c("chr_name","start","end"),
-                 values=list("chr_name"=INPUTDATA$Chromosome,
-                             "start"=INPUTDATA$Start,
-                             "end"=INPUTDATA$End),
+                 values=list("chr_name"=INPUTDATA$Chromosome[1],
+                             "start"=INPUTDATA$Start[1],
+                             "end"=INPUTDATA$End[1]),
                  mart=ensembl_snps_gal7b)
+
+if(nrow(INPUTDATA)>1){
+  for(i in 2:nrow(INPUTDATA)){
+    TMP<-getBM(attributes=c("chr_name","chrom_start","chrom_strand","refsnp_id",
+                              "allele","ensembl_gene_stable_id","ensembl_type"),
+                 filters=c("chr_name","start","end"),
+                 values=list("chr_name"=INPUTDATA$Chromosome[i],
+                             "start"=INPUTDATA$Start[i],
+                             "end"=INPUTDATA$End[i]),
+                 mart=ensembl_snps_gal7b)
+    DATA_SNPS<-rbind(DATA_SNPS,TMP)
+  }
+}
 
 #Save formatted data.
 write.table(DATA_SNPS,file=OUTPUTFILE,sep="\t",row.names=FALSE,col.names=TRUE)
