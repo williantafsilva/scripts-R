@@ -91,6 +91,8 @@ INPUTDATA<-data.frame(Chromosome=c(CHRLIST),
 INPUTDATA$Chromosome<-gsub("Chr","",INPUTDATA$Chromosome) #Remove "Chr" from chromosome names.
 INPUTDATA$Chromosome<-gsub("chr","",INPUTDATA$Chromosome) #Remove "chr" from chromosome names.
 
+INPUTDATA
+
 #List available types of annotation.
 #listEnsembl() 
 #ensembl_genes<-useEnsembl(biomart="genes") #Genes.
