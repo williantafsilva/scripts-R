@@ -168,9 +168,9 @@ DATA_GENES<-getBM(attributes=c("chromosome_name","start_position","end_position"
 #DATA_SNPS
 
 #Save formatted data.
-write.csv(DATA_GENES,file=OUTPUTFILE,row.names=FALSE,col.names=TRUE,sep=",")
-#write.csv(DATA_TRANSCRIPTS,file=OUTPUTFILE,row.names=FALSE,col.names=TRUE,sep=",")
-#write.csv(DATA_SNPS,file=OUTPUTFILE,row.names=FALSE,col.names=TRUE,sep=",")
+write.csv(DATA_GENES,file=OUTPUTFILE,row.names=FALSE)
+#write.csv(DATA_TRANSCRIPTS,file=OUTPUTFILE,row.names=FALSE)
+#write.csv(DATA_SNPS,file=OUTPUTFILE,row.names=FALSE)
 
 ############################################################################
 ############################################################################
