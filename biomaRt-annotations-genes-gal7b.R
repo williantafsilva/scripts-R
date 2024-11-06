@@ -41,7 +41,6 @@ cat("\n")
 cat("############################################################################\n")
 cat("#LOAD LIBRARIES:\n")
 
-library(R.utils)
 library(tidyverse)
 library(biomaRt)
 
