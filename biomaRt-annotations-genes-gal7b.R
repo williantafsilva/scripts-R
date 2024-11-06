@@ -23,7 +23,7 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 #Input $4: Chromosome (or comma-separated vector of chromosome names).
 #Input $5: Start position (or comma-separated vector of start positions).
 #Input $6: End position (or comma-separated vector of end positions).
-#Output: File with annotations (*.csv).
+#Output: File with annotations (*.txt).
 
 #Usage: 
 #Rscript --vanilla template-Rscript.R <JOB ID> <OUTPUT LOCATION> <FILE TAG> <CHROMOSOME> <START POSITION> <END POSITIONS>
@@ -67,7 +67,7 @@ CHRLIST<-ARGS[4]
 STARTPOSLIST<-ARGS[5]
 ENDPOSLIST<-ARGS[6]
 
-OUTPUTFILENAME<-paste0("biomartgal7b.annotgenes",OUTPUTFILETAG,"-job",JOBID,".csv")
+OUTPUTFILENAME<-paste0("biomartgal7b.annotgenes",OUTPUTFILETAG,"-job",JOBID,".txt")
 OUTPUTFILE<-paste0(OUTPUTLOCATION,"/",OUTPUTFILENAME)
 
 cat(paste0("OUTPUTFILETAG: ",OUTPUTFILETAG,"\n"))
@@ -167,7 +167,8 @@ DATA_GENES<-getBM(attributes=c("chromosome_name","start_position","end_position"
 #DATA_SNPS
 
 #Save formatted data.
-write.csv(DATA_GENES,file=OUTPUTFILE,row.names=FALSE)
+write.table(DATA_GENES,file=OUTPUTFILE,sep="\t",row.names=FALSE,col.names=TRUE)
+#write.csv(DATA_GENES,file=OUTPUTFILE,row.names=FALSE)
 #write.csv(DATA_TRANSCRIPTS,file=OUTPUTFILE,row.names=FALSE)
 #write.csv(DATA_SNPS,file=OUTPUTFILE,row.names=FALSE)
 
