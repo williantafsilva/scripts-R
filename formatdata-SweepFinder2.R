@@ -84,7 +84,7 @@ setwd(INPUTDIR)
 
 #List of files in the input directory.
 FILES<-list.files(INPUTDIR) 
-FILES<-FILES[grep("*.SFoutput$",FILES)]
+FILES<-FILES[grep("*.SF2output$",FILES)]
 
 #Sequence of chromosomes to be plotted.
 CHRSEQ<-c(1:40) #Autosomes only.
