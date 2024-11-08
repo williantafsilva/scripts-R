@@ -90,7 +90,7 @@ cat(paste0("PROCESSING FILE: ",INPUTFILE,"\n"))
 cat("Converting data into an object of class haplohh (rehh::data2haplohh).\n")
 HAPLODATA<-data2haplohh(hap_file=INPUTFILE,
                         polarize_vcf=FALSE, #Unpolarized data.
-                        min_maf=0, #Filter data on a minor allele frequency or MAF.
+                        min_maf=0.0, #Filter data on a minor allele frequency or MAF.
                         vcf_reader="data.table",
                         verbose=TRUE)
 
@@ -98,8 +98,7 @@ cat("Computing EHH based statistics over a whole chromosome (rehh::scan_hh).\n")
 #Calculate iHH statistics.
 HAPLODATA_iHH<-scan_hh(HAPLODATA,
                         phased=PHASINGSTATUS, #Phased data?
-                        polarized=FALSE, #Unpolarized data.
-                        threads=10) 
+                        polarized=FALSE) #Unpolarized data.
 
 #Sleep.
 Sys.sleep(5)
