@@ -23,6 +23,7 @@ sink(paste0(OUTPUTLOCATION,"/job",JOBID,".Rlog"),type=c("output","message"))
 #Input $4: Chromosome (or comma-separated list of chromosome names; use | paste -sd,).
 #Input $5: Start position (or comma-separated list of start positions; use | paste -sd,).
 #Input $6: End position (or comma-separated list of end positions; use | paste -sd,).
+#Input $7: Region-specific note to be included in the output table (or comma-separated list of notes; use | paste -sd,).
 #Output: File with annotations (*.txt).
 
 #Usage: 
@@ -66,6 +67,7 @@ OUTPUTFILETAG<-ARGS[3]
 CHRLIST<-ARGS[4]
 STARTPOSLIST<-ARGS[5]
 ENDPOSLIST<-ARGS[6]
+NOTES<-ARGS[7]
 
 OUTPUTFILENAME<-paste0("biomartgal7b.annotgenes",OUTPUTFILETAG,"-job",JOBID,".txt")
 OUTPUTFILE<-paste0(OUTPUTLOCATION,"/",OUTPUTFILENAME)
@@ -74,6 +76,7 @@ cat(paste0("OUTPUTFILETAG: ",OUTPUTFILETAG,"\n"))
 cat(paste0("CHRLIST: ",CHRLIST,"\n"))
 cat(paste0("STARTPOSLIST: ",STARTPOSLIST,"\n"))
 cat(paste0("ENDPOSLIST: ",ENDPOSLIST,"\n"))
+cat(paste0("NOTES: ",NOTES,"\n"))
 cat(paste0("OUTPUTLOCATION: ",OUTPUTLOCATION,"\n"))
 cat(paste0("OUTPUTFILENAME: ",OUTPUTFILENAME,"\n"))
 cat(paste0("OUTPUTFILE: ",OUTPUTFILE,"\n"))
@@ -87,7 +90,8 @@ cat(paste0("PROCESSING INPUT DATA.\n"))
 #Input data.
 INPUTDATA<-data.frame(Chromosome=strsplit(CHRLIST,",")[[1]],
                       Start=strsplit(STARTPOSLIST,",")[[1]],
-                      End=strsplit(ENDPOSLIST,",")[[1]])
+                      End=strsplit(ENDPOSLIST,",")[[1]],
+                      Note=strsplit(NOTES,",")[[1]])
 INPUTDATA$Chromosome<-gsub("Chr","",INPUTDATA$Chromosome) #Remove "Chr" from chromosome names.
 INPUTDATA$Chromosome<-gsub("chr","",INPUTDATA$Chromosome) #Remove "chr" from chromosome names.
 INPUTDATA
@@ -104,6 +108,7 @@ DATA_GENES<-getBM(attributes=c("chromosome_name","start_position","end_position"
                               "start"=INPUTDATA$Start[1],
                               "end"=INPUTDATA$End[1]),
                   mart=ensembl_genes_gal7b)
+DATA_GENES$note<-INPUTDATA$Note[1]
 
 if(nrow(INPUTDATA)>1){
   for(i in 2:nrow(INPUTDATA)){
@@ -115,6 +120,7 @@ if(nrow(INPUTDATA)>1){
                            "start"=INPUTDATA$Start[i],
                            "end"=INPUTDATA$End[i]),
                mart=ensembl_genes_gal7b)
+    TMP$note<-INPUTDATA$Note[i]
     DATA_GENES<-rbind(DATA_GENES,TMP)
   }
 }
@@ -137,6 +143,7 @@ Output file tag: ",OUTPUTFILETAG,"
 Chromosome: ",CHRLIST,"
 Start position: ",STARTPOSLIST,"
 End position: ",ENDPOSLIST,"
+Note: ",NOTES,"
 Output file: ",OUTPUTFILE,"
 
 "),file=paste0(OUTPUTLOCATION,"/README.txt"),append=TRUE)
