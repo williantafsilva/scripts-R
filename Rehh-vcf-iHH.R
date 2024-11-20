@@ -43,6 +43,7 @@ library(ggplot2)
 library(viridisLite)
 library(tidyverse)
 library(rehh)
+library(parallel)
 
 cat("\n")
 cat("############################################################################\n")
@@ -94,11 +95,14 @@ HAPLODATA<-data2haplohh(hap_file=INPUTFILE,
                         vcf_reader="data.table",
                         verbose=TRUE)
 
+saveRDS(HAPLODATA,file=paste0(OUTPUTFILEPREFIX,".haplohh-job",JOBID,".rds"))
+
 cat("Computing EHH based statistics over a whole chromosome (rehh::scan_hh).\n")
 #Calculate iHH statistics.
 HAPLODATA_iHH<-scan_hh(HAPLODATA,
                         phased=PHASINGSTATUS, #Phased data?
-                        polarized=FALSE) #Unpolarized data.
+                        polarized=FALSE, #Unpolarized data.
+                        threads=detectCores()) 
 
 #Sleep.
 Sys.sleep(5)
