@@ -94,8 +94,7 @@ HAPLODATA<-data2haplohh(hap_file=INPUTFILE,
                         min_maf=0.0, #Filter data on a minor allele frequency or MAF.
                         vcf_reader="data.table",
                         verbose=TRUE)
-
-saveRDS(HAPLODATA,file=paste0(OUTPUTFILEPREFIX,".haplohh-job",JOBID,".rds"))
+#saveRDS(HAPLODATA,file=paste0(OUTPUTFILEPREFIX,".haplohh-job",JOBID,".rds"))
 
 cat("Computing EHH based statistics over a whole chromosome (rehh::scan_hh).\n")
 #Calculate iHH statistics.
