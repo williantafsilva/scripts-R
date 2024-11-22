@@ -91,7 +91,7 @@ cat(paste0("PROCESSING FILE: ",INPUTFILE,"\n"))
 cat("Converting data into an object of class haplohh (rehh::data2haplohh).\n")
 HAPLODATA<-data2haplohh(hap_file=INPUTFILE,
                         polarize_vcf=FALSE, #Unpolarized data.
-                        min_maf=0.0, #Filter data on a minor allele frequency or MAF.
+                        min_maf=0.05, #Filter data on a minor allele frequency or MAF.
                         vcf_reader="data.table",
                         verbose=TRUE)
 #saveRDS(HAPLODATA,file=paste0(OUTPUTFILEPREFIX,".haplohh-job",JOBID,".rds"))
