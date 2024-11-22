@@ -101,7 +101,7 @@ cat("Computing EHH based statistics over a whole chromosome (rehh::scan_hh).\n")
 HAPLODATA_iHH<-scan_hh(HAPLODATA,
                         phased=PHASINGSTATUS, #Phased data?
                         polarized=FALSE, #Unpolarized data.
-                        threads=10) 
+                        threads=20) 
 
 #Sleep.
 Sys.sleep(5)
